@@ -1,20 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using CleanProject.Service.Interfaces;
 
-namespace CleanProject
+namespace CleanProject.Service.Helpers
 {
-    internal static class FileHelper
+    public class FileHelper : IFileHelper
     {
-        internal static void DeleteFiles(this string directory, params string[] searchPatterns)
+        private readonly INotificationHelper _notificationHelper;
+
+        public FileHelper(INotificationHelper notificationHelper)
         {
+            this._notificationHelper = notificationHelper;
+        }
+
+        public void DeleteFiles(string directory)
+        {
+            this.DeleteFiles(directory, "*");
+        }
+
+        public void DeleteFiles(string directory, IEnumerable<string> searchPatterns)
+        {
+            if (searchPatterns?.Any() != true)
+            {
+                return;
+            }
+
             foreach (var searchPattern in searchPatterns)
             {
-                DeleteFiles(directory, searchPattern);
+                this.DeleteFiles(directory, searchPattern);
             }
         }
 
-        internal static void DeleteFiles(this string directory, string searchPattern)
+        private void DeleteFiles(string directory, string searchPattern)
         {
             if (!Directory.Exists(directory))
             {
@@ -26,7 +45,8 @@ namespace CleanProject
             {
                 try
                 {
-                    Program.WriteVerboseMessage("Deleting file {0}", file);
+                    this._notificationHelper.WriteVerboseMessage($"Deleting file {file}");
+
                     TurnOffReadOnlyFlag(file);
                     File.Delete(file);
                 }
@@ -37,17 +57,16 @@ namespace CleanProject
             }
         }
 
-        internal static void DeleteFiles(this string directory)
+        /// <summary>
+        ///     Turns on the read only flag for a file.
+        /// </summary>
+        /// <param name="file">
+        ///     The file to change.
+        /// </param>
+        public void TurnOnReadOnlyFlag(string file)
         {
-            DeleteFiles(directory, "*");
-        }
-
-        internal static void DeleteFiles(this string directory, IEnumerable<string> searchPatterns)
-        {
-            foreach (var searchPattern in searchPatterns)
-            {
-                DeleteFiles(directory, searchPattern);
-            }
+            var attribs = File.GetAttributes(file);
+            File.SetAttributes(file, attribs | FileAttributes.ReadOnly);
         }
 
         /// <summary>
@@ -59,7 +78,7 @@ namespace CleanProject
         /// <returns>
         ///     Returns true if the read only flag was set.
         /// </returns>
-        internal static bool TurnOffReadOnlyFlag(this string file)
+        public bool TurnOffReadOnlyFlag(string file)
         {
             var retValue = false;
             var attribs = File.GetAttributes(file);
@@ -68,19 +87,8 @@ namespace CleanProject
                 retValue = true;
                 File.SetAttributes(file, attribs & ~FileAttributes.ReadOnly);
             }
-            return (retValue);
-        }
 
-        /// <summary>
-        ///     Turns on the read only flag for a file.
-        /// </summary>
-        /// <param name="file">
-        ///     The file to change.
-        /// </param>
-        internal static void TurnOnReadOnlyFlag(this string file)
-        {
-            var attribs = File.GetAttributes(file);
-            File.SetAttributes(file, attribs | FileAttributes.ReadOnly);
+            return (retValue);
         }
     }
 }

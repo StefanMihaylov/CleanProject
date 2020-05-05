@@ -1,42 +1,36 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using CleanProject.Service.Interfaces;
 
-namespace CleanProject
+namespace CleanProject.Service.Helpers
 {
-    internal static class DirectoryHelper
+    public class DirectoryHelper : IDirectoryHelper
     {
-        public static void RemoveSubDirectories(this string directory, string searchPattern)
+        private readonly INotificationHelper _notificationHelper;
+        private readonly IFileHelper _fileHelper;
+
+        public DirectoryHelper(INotificationHelper notificationHelper, IFileHelper fileHelper)
         {
-            if (!Directory.Exists(directory))
+            this._notificationHelper = notificationHelper;
+            this._fileHelper = fileHelper;
+        }
+
+        public void RemoveSubDirectories(string directory, IEnumerable<string> searchPatterns)
+        {
+            if (searchPatterns?.Any() != true)
             {
                 return;
             }
 
-            var directories = Directory.GetDirectories(directory, searchPattern, SearchOption.AllDirectories);
-            foreach (var d in directories)
-            {
-                Delete(d);
-            }
-        }
-
-        public static void RemoveSubDirectories(this string directory, params string[] searchPatterns)
-        {
             foreach (var pattern in searchPatterns)
             {
-                directory.RemoveSubDirectories(pattern);
+                this.RemoveSubDirectories(directory, pattern);
             }
         }
 
-        public static void RemoveSubDirectories(this string directory, IEnumerable<string> searchPatterns)
-        {
-            foreach (var pattern in searchPatterns)
-            {
-                directory.RemoveSubDirectories(pattern);
-            }
-        }
-
-        internal static void CopyDirectory(this string source, string dest, bool subdirs, bool removeIfExists)
+        public void CopyDirectory(string source, string destination, bool subdirs, bool removeIfExists)
         {
             var dir = new DirectoryInfo(source);
             var dirs = dir.GetDirectories();
@@ -50,13 +44,13 @@ namespace CleanProject
             // Removes the directory if it already exists
             if (removeIfExists)
             {
-                Delete(dest);
+                this.Delete(destination);
             }
 
             // If the destination directory does not exist, create it.
-            if (!Directory.Exists(dest))
+            if (!Directory.Exists(destination))
             {
-                Directory.CreateDirectory(dest);
+                Directory.CreateDirectory(destination);
             }
 
             // Get the file contents of the directory to copy.
@@ -65,7 +59,7 @@ namespace CleanProject
             foreach (var file in files)
             {
                 // Create the path to the new copy of the file.
-                var temppath = Path.Combine(dest, file.Name);
+                var temppath = Path.Combine(destination, file.Name);
 
                 // Copy the file.
                 file.CopyTo(temppath, false);
@@ -77,7 +71,7 @@ namespace CleanProject
                 foreach (var subdir in dirs)
                 {
                     // Create the subdirectory.
-                    var temppath = Path.Combine(dest, subdir.Name);
+                    var temppath = Path.Combine(destination, subdir.Name);
 
                     // Copy the subdirectories.
                     CopyDirectory(subdir.FullName, temppath, true, removeIfExists);
@@ -85,14 +79,15 @@ namespace CleanProject
             }
         }
 
-        internal static void Delete(this string directory)
+        public void Delete(string directory)
         {
             try
             {
                 if (Directory.Exists(directory))
                 {
-                    Program.WriteVerboseMessage("Removing {0}", directory);
-                    directory.DeleteFiles();
+                    this._notificationHelper.WriteVerboseMessage($"Removing {directory}");
+
+                    this._fileHelper.DeleteFiles(directory);
                     var retry = 0;
 
                     // Sometimes you encounter a directory is not empty error immediately after deleting all the files.
@@ -118,6 +113,20 @@ namespace CleanProject
             catch (IOException ioException)
             {
                 throw new ApplicationException($"Error removing directory {directory}: {ioException.Message}");
+            }
+        }
+
+        private void RemoveSubDirectories(string directory, string searchPattern)
+        {
+            if (!Directory.Exists(directory))
+            {
+                return;
+            }
+
+            var directories = Directory.GetDirectories(directory, searchPattern, SearchOption.AllDirectories);
+            foreach (var d in directories)
+            {
+                Delete(d);
             }
         }
     }

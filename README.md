@@ -1,7 +1,6 @@
 
 # CleanProject
 A clone of the project from [kiwipiet's repository](https://github.com/kiwipiet/CleanProject).
-
 The project is refactored. The command line tool is removed. A simple WPF UI is created.
 
 Original source location [CleanProject - Cleans Visual Studio Solutions For Uploading or Email](https://code.msdn.microsoft.com/Clean-Cleans-Visual-Studio-a05bca4f)
