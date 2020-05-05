@@ -47,7 +47,7 @@ namespace CleanProject.Service
                 return false;
             }
 
-            this._notificationHelper.WriteMessage("Cleaning complete.");
+            this._notificationHelper.WriteColorMessage(ConsoleColor.Green, "Cleaning complete.");
 
             return true;
         }

@@ -38,9 +38,5 @@ namespace CleanProject.Service.Models
             this.RemoveFiles = files;
             this.RemoreSourceControl = sourceControl;
         }
-
-        public Options() : this(null, null, null)
-        {
-        }
     }
 }

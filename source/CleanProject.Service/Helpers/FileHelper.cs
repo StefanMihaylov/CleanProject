@@ -40,6 +40,8 @@ namespace CleanProject.Service.Helpers
                 return;
             }
 
+            this._notificationHelper.WriteColorMessage(ConsoleColor.Green, $" --- File SearchPattern: '{searchPattern}' ---");
+
             var files = Directory.GetFiles(directory, searchPattern, SearchOption.AllDirectories);
             foreach (var file in files)
             {

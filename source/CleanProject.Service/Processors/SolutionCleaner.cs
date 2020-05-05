@@ -37,7 +37,7 @@ namespace CleanProject.Service.Processors
 
         public IEnumerable<SolutionInfo> GetDirectories(IEnumerable<string> directories, bool zipProject)
         {
-            var result = directories.Select(directory => GetDirectories(directory, zipProject));
+            var result = directories.Select(directory => GetDirectories(directory, zipProject)).ToList();
 
             foreach (var solutionInfo in result)
             {

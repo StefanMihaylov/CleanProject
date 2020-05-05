@@ -123,6 +123,8 @@ namespace CleanProject.Service.Helpers
                 return;
             }
 
+            this._notificationHelper.WriteColorMessage(ConsoleColor.Green, $" --- Directory SearchPattern: '{searchPattern}' ---");
+
             var directories = Directory.GetDirectories(directory, searchPattern, SearchOption.AllDirectories);
             foreach (var d in directories)
             {
