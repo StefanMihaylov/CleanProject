@@ -17,7 +17,7 @@ namespace CleanProject.Service.Helpers
             this._fileHelper = fileHelper;
         }
 
-        public void RemoveSubDirectories(string directory, IEnumerable<string> searchPatterns)
+        public void RemoveSubDirectories(string directory, IEnumerable<string> searchPatterns, bool skipNotifications)
         {
             if (searchPatterns?.Any() != true)
             {
@@ -26,7 +26,7 @@ namespace CleanProject.Service.Helpers
 
             foreach (var pattern in searchPatterns)
             {
-                this.RemoveSubDirectories(directory, pattern);
+                this.RemoveSubDirectories(directory, pattern, skipNotifications);
             }
         }
 
@@ -44,7 +44,7 @@ namespace CleanProject.Service.Helpers
             // Removes the directory if it already exists
             if (removeIfExists)
             {
-                this.Delete(destination);
+                this.DeleteDirectory(destination, true);
             }
 
             // If the destination directory does not exist, create it.
@@ -79,7 +79,23 @@ namespace CleanProject.Service.Helpers
             }
         }
 
-        public void Delete(string directory)
+        private void RemoveSubDirectories(string directory, string searchPattern, bool skipNotifications)
+        {
+            if (!Directory.Exists(directory))
+            {
+                return;
+            }
+
+            this._notificationHelper.WriteColorMessage(ConsoleColor.Green, $" --- Directory SearchPattern: '{searchPattern}' ---");
+
+            var directories = Directory.GetDirectories(directory, searchPattern, SearchOption.AllDirectories);
+            foreach (var d in directories)
+            {
+                DeleteDirectory(d, skipNotifications);
+            }
+        }
+
+        public void DeleteDirectory(string directory, bool skipNotifications)
         {
             try
             {
@@ -87,7 +103,7 @@ namespace CleanProject.Service.Helpers
                 {
                     this._notificationHelper.WriteVerboseMessage($"Removing {directory}");
 
-                    this._fileHelper.DeleteFiles(directory);
+                    this._fileHelper.DeleteFiles(directory, new[] { "*" }, skipNotifications);
                     var retry = 0;
 
                     // Sometimes you encounter a directory is not empty error immediately after deleting all the files.
@@ -113,22 +129,6 @@ namespace CleanProject.Service.Helpers
             catch (IOException ioException)
             {
                 throw new ApplicationException($"Error removing directory {directory}: {ioException.Message}");
-            }
-        }
-
-        private void RemoveSubDirectories(string directory, string searchPattern)
-        {
-            if (!Directory.Exists(directory))
-            {
-                return;
-            }
-
-            this._notificationHelper.WriteColorMessage(ConsoleColor.Green, $" --- Directory SearchPattern: '{searchPattern}' ---");
-
-            var directories = Directory.GetDirectories(directory, searchPattern, SearchOption.AllDirectories);
-            foreach (var d in directories)
-            {
-                Delete(d);
             }
         }
     }

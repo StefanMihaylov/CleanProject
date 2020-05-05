@@ -20,6 +20,8 @@ namespace CleanProject.Service.Models
         /// </summary>
         public bool RemoveSourceControl { get; private set; }
 
+        public bool ShowAllMessages { get; private set; }
+
         /// <summary>
         /// Zip file directory
         /// </summary>
@@ -35,12 +37,13 @@ namespace CleanProject.Service.Models
         /// </summary>
         public bool QuietMode { get; private set; }
 
-        public CleanRequest(IEnumerable<string> directories, bool zipProject, bool removeSourceControl, string zipDirectory,
-            IOptions additionalOptions, bool quietMode)
+        public CleanRequest(IEnumerable<string> directories, bool zipProject, bool removeSourceControl, bool showAllMessages,
+            string zipDirectory, IOptions additionalOptions, bool quietMode)
         {
             this.Directories = directories;
             this.ZipProject = zipProject;
             this.RemoveSourceControl = removeSourceControl;
+            this.ShowAllMessages = showAllMessages;
             this.ZipDirectory = zipDirectory;
             this.AdditionalOptions = additionalOptions;
             this.QuietMode = quietMode;

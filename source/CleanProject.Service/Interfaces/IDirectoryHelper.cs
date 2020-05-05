@@ -6,8 +6,8 @@ namespace CleanProject.Service.Interfaces
     {
         void CopyDirectory(string source, string destination, bool subdirs, bool removeIfExists);
 
-        void Delete(string directory);
+        void DeleteDirectory(string directory, bool skipNotifications);
 
-        void RemoveSubDirectories(string directory, IEnumerable<string> searchPatterns);
+        void RemoveSubDirectories(string directory, IEnumerable<string> searchPatterns, bool skipNotifications);
     }
 }

@@ -15,12 +15,7 @@ namespace CleanProject.Service.Helpers
             this._notificationHelper = notificationHelper;
         }
 
-        public void DeleteFiles(string directory)
-        {
-            this.DeleteFiles(directory, "*");
-        }
-
-        public void DeleteFiles(string directory, IEnumerable<string> searchPatterns)
+        public void DeleteFiles(string directory, IEnumerable<string> searchPatterns, bool skipNotifications)
         {
             if (searchPatterns?.Any() != true)
             {
@@ -29,27 +24,33 @@ namespace CleanProject.Service.Helpers
 
             foreach (var searchPattern in searchPatterns)
             {
-                this.DeleteFiles(directory, searchPattern);
+                this.DeleteFiles(directory, searchPattern, skipNotifications);
             }
         }
 
-        private void DeleteFiles(string directory, string searchPattern)
+        private void DeleteFiles(string directory, string searchPattern, bool skipNotifications)
         {
             if (!Directory.Exists(directory))
             {
                 return;
             }
 
-            this._notificationHelper.WriteColorMessage(ConsoleColor.Green, $" --- File SearchPattern: '{searchPattern}' ---");
+            if (!skipNotifications)
+            {
+                this._notificationHelper.WriteColorMessage(ConsoleColor.Green, $" --- File SearchPattern: '{searchPattern}' ---");
+            }
 
             var files = Directory.GetFiles(directory, searchPattern, SearchOption.AllDirectories);
             foreach (var file in files)
             {
                 try
                 {
-                    this._notificationHelper.WriteVerboseMessage($"Deleting file {file}");
+                    if (!skipNotifications)
+                    {
+                        this._notificationHelper.WriteVerboseMessage($"Deleting file {file}");
+                    }
 
-                    TurnOffReadOnlyFlag(file);
+                    this.TurnOffReadOnlyFlag(file);
                     File.Delete(file);
                 }
                 catch (IOException ex)

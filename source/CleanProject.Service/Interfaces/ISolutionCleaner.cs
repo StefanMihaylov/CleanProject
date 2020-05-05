@@ -6,7 +6,7 @@ namespace CleanProject.Service.Interfaces
 {
     public interface ISolutionCleaner
     {
-        void CleanDirectories(IEnumerable<SolutionInfo> directories, IOptions additionalOptions, bool removeSourceControl);
+        void CleanDirectories(IEnumerable<SolutionInfo> directories, IOptions additionalOptions, bool removeSourceControl, bool showAllMessages);
 
         IEnumerable<SolutionInfo> GetDirectories(IEnumerable<string> directories, bool zipProject);
     }

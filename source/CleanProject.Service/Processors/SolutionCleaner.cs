@@ -27,11 +27,11 @@ namespace CleanProject.Service.Processors
             this._notificationHelper = notificationHelper;
         }
 
-        public void CleanDirectories(IEnumerable<SolutionInfo> directories, IOptions additionalOptions, bool removeSourceControl)
+        public void CleanDirectories(IEnumerable<SolutionInfo> directories, IOptions additionalOptions, bool removeSourceControl, bool showAllMessages)
         {
             foreach (var solutionInfo in directories)
             {
-                CleanDirectory(solutionInfo.WorkingPath, additionalOptions, removeSourceControl);
+                CleanDirectory(solutionInfo.WorkingPath, additionalOptions, removeSourceControl, showAllMessages);
             }
         }
 
@@ -41,19 +41,19 @@ namespace CleanProject.Service.Processors
 
             foreach (var solutionInfo in result)
             {
-                this._notificationHelper.WriteMessage($"Cleaning Solution Directory {solutionInfo.WorkingPath}");
+                this._notificationHelper.WriteMessage($"Cleaning Solution Directory: {solutionInfo.WorkingPath}");
             }
 
             return result;
         }
 
-        private void CleanDirectory(string directory, IOptions additionalOptions, bool removeSourceControl)
+        private void CleanDirectory(string directory, IOptions additionalOptions, bool removeSourceControl, bool showAllMessages)
         {
-            this._directoryHelper.RemoveSubDirectories(directory, this._options.RemoveDirectories);
-            this._directoryHelper.RemoveSubDirectories(directory, additionalOptions?.RemoveDirectories);
+            this._directoryHelper.RemoveSubDirectories(directory, this._options.RemoveDirectories, !showAllMessages);
+            this._directoryHelper.RemoveSubDirectories(directory, additionalOptions?.RemoveDirectories, !showAllMessages);
 
-            this._fileHelper.DeleteFiles(directory, this._options.RemoveFiles);
-            this._fileHelper.DeleteFiles(directory, additionalOptions?.RemoveFiles);
+            this._fileHelper.DeleteFiles(directory, this._options.RemoveFiles, !showAllMessages);
+            this._fileHelper.DeleteFiles(directory, additionalOptions?.RemoveFiles, !showAllMessages);
 
             if (removeSourceControl)
             {

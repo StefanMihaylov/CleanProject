@@ -49,7 +49,7 @@ namespace CleanProject.Service.Processors
                 zip.Save(zipName);
                 this._notificationHelper.WriteColorMessage(ConsoleColor.Yellow, $"Created zip file {zipName}");
 
-                this._directoryHelper.Delete(directoryInfo.WorkingPath);
+                this._directoryHelper.DeleteDirectory(directoryInfo.WorkingPath, true);
             }
         }
     }

@@ -31,6 +31,11 @@
                   Margin="30,87,0,0" IsThreeState="False"
                   Name="ZipProject"/>
 
+        <CheckBox Content="Show All Messages" 
+            HorizontalAlignment="Left" VerticalAlignment="Top"
+            Margin="183,57,0,0"  IsThreeState="False"                  
+            Name="ShowAllMessages" />
+
         <Button Content="Clean" 
                 HorizontalAlignment="Left"  VerticalAlignment="Top"
                 Height="25"  Width="60"

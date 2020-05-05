@@ -34,7 +34,8 @@ namespace CleanProject.Service
             try
             {
                 IEnumerable<SolutionInfo> directories = this._solutionCleaner.GetDirectories(request.Directories, request.ZipProject);
-                this._solutionCleaner.CleanDirectories(directories, request.AdditionalOptions, request.RemoveSourceControl);
+                this._solutionCleaner.CleanDirectories(directories, request.AdditionalOptions, request.RemoveSourceControl, 
+                    request.ShowAllMessages);
 
                 if (request.ZipProject)
                 {

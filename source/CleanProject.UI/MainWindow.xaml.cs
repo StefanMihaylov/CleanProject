@@ -31,6 +31,7 @@ namespace CleanProject.UI
             this.Title = CleanProjectService.TITLE;
             this.ZipProject.IsChecked = true;
             this.SourceControl.IsChecked = false;
+            this.ShowAllMessages.IsChecked = false;
         }
 
         //public void Report(string text)
@@ -60,8 +61,9 @@ namespace CleanProject.UI
             string directory = this.Directory.Text;
             bool zipProject = this.ZipProject.IsChecked ?? false;
             bool sourceControl = this.SourceControl.IsChecked ?? false;
+            bool showAllMessages = this.ShowAllMessages.IsChecked ?? false;
 
-            var request = new CleanRequest(new[] { directory }, zipProject, sourceControl, null, null, false);
+            var request = new CleanRequest(new[] { directory }, zipProject, sourceControl, showAllMessages, null, null, false);
 
             bool result = await Task.Run(() =>
             {
