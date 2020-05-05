@@ -8,7 +8,7 @@ Developed by Ron Jacobs. Last Version 1.2.3, Released on 2011.07.24, Works with 
 
 The project is refactored. The command line tool is removed. A simple WPF UI is created.
 
-#Introduction
+# Introduction
 Clean Project is a utility that cleans Visual Studio project directories so you can quickly upload or email a zip file with your solution.
 
 How many times have you wanted to send a project to a friend or upload it to a web site like MSDN Code Gallery only to find that your zip file has lots of stuff that you don't need to send in it making the file larger than it needs to be.
