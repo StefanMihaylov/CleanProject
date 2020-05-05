@@ -1,12 +1,12 @@
 
 # CleanProject
-A clone of the project from [kiwipiet's repository](https://github.com/kiwipiet/CleanProject)
+A clone of the project from [kiwipiet's repository](https://github.com/kiwipiet/CleanProject).
+
+The project is refactored. The command line tool is removed. A simple WPF UI is created.
 
 Original source location [CleanProject - Cleans Visual Studio Solutions For Uploading or Email](https://code.msdn.microsoft.com/Clean-Cleans-Visual-Studio-a05bca4f)
 
-Developed by Ron Jacobs. Last Version 1.2.3, Released on 2011.07.24, Works with Visual Studio 2010.
-
-The project is refactored. The command line tool is removed. A simple WPF UI is created.
+Developed by Ron Jacobs. Last Version 1.2.3, Released on 2011.07.24, Worked with Visual Studio 2010.
 
 # Introduction
 Clean Project is a utility that cleans Visual Studio project directories so you can quickly upload or email a zip file with your solution.
