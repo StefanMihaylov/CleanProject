@@ -52,8 +52,8 @@ namespace CleanProject.Service.Processors
             this._directoryHelper.RemoveSubDirectories(directory, this._options.RemoveDirectories, !showAllMessages);
             this._directoryHelper.RemoveSubDirectories(directory, additionalOptions?.RemoveDirectories, !showAllMessages);
 
-            this._fileHelper.DeleteFiles(directory, this._options.RemoveFiles, !showAllMessages);
-            this._fileHelper.DeleteFiles(directory, additionalOptions?.RemoveFiles, !showAllMessages);
+            this._fileHelper.DeleteFiles(directory, this._options.RemoveFiles, false);
+            this._fileHelper.DeleteFiles(directory, additionalOptions?.RemoveFiles, false);
 
             if (removeSourceControl)
             {

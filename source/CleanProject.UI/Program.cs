@@ -34,7 +34,7 @@ namespace CleanProject.UI
 
             container.RegisterPackages(assemblies);
 
-            container.Register<IOptions>(() => new Options(new[] { "packages", ".vs" }, null, null), Lifestyle.Singleton);
+            container.Register<IOptions>(() => new Options(new[] { "packages", ".vs" }, new[] { "*.user" }, null), Lifestyle.Singleton);
             container.Register<INotificationHelper, Notificator>(Lifestyle.Singleton);
 
             // Register your windows and view models:
